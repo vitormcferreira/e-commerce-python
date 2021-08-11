@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block titulo %}Alterar cadastro | {% endblock %}
+
+{% block conteudo %}
+<div class="row">
+    <div class="col-lg">
+        <h1>Alterar cadastro</h1>
+        <form method="post" action="{% url 'perfil:atualizar' %}">
+            {% csrf_token %}
+            {{ atualizarusuarioform|crispy }}
+            {{ atualizarperfilform|crispy }}
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                Salvar
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

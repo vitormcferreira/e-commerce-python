@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% load vffilters %}
+
+{% block titulo %}Endereços | {% endblock %}
+
+{% block conteudo %}
+{% if enderecos %}
+<div class="row mt-3">
+    <div class="col">
+        <h3>Endereços</h3>
+        <div class="table-responsive">
+            <table class="table">
+                <tr>
+                    <th class="d-none d-lg-block">Apelido</th>
+                    <th>Estado</th>
+                    <th>Cidade</th>
+                    <th>CEP</th>
+                    <th>Bairro</th>
+                    <th>Complemento</th>
+                    <th>Número</th>
+                    <th>Endereço</th>
+                    <th>Editar</th>
+                    <th>Apagar</th>
+                </tr>
+                {% for endereco in enderecos %}
+                <tr>
+                    <td>{{ endereco.apelido }}</td>
+                    <td>{{ endereco.estado }}</td>
+                    <td>{{ endereco.cidade }}</td>
+                    <td>{{ endereco.cep }}</td>
+                    <td>{{ endereco.bairro }}</td>
+                    <td>{{ endereco.complemento }}</td>
+                    <td>{{ endereco.numero }}</td>
+                    <td>{{ endereco.endereco }}</td>
+                    <td>
+                        <a href="{% url 'perfil:atualizarendereco' endereco.pk %}">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                    <td>
+                        <form method="get" action="{% url 'perfil:removerendereco' %}">
+                            <input type="hidden" name="eid" value="{{ endereco.pk }}">
+                            <button type="submit" class="btn pl-0 pr-3">
+                                <i class="ml-3 fas fa-times-circle text-danger"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+
+        {% include 'includes/_pagination.html' %}
+
+        <div class="col-lg mt-auto">
+            <a class="btn btn-lg btn-block btn-primary" href="{% url 'perfil:registrarendereco' %}">
+                Novo endereço
+            </a>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="row mt-3">
+    <div class="col">
+        <h3>Sem endereços</h3>
+        <p class="lead">Não há endereços registrados. Clique
+            <a href="{% url 'perfil:registrarendereco' %}">aqui</a> para registrar.
+        </p>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

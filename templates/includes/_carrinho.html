@@ -1,0 +1,40 @@
+{% load vffilters %}
+
+<div class="table-responsive">
+    <table class="table">
+        <tr>
+            <th class="d-none d-lg-block">Imagem</th>
+            <th>Produto</th>
+            <th>V.</th>
+            <th>QTD.</th>
+            <th>Total</th>
+        </tr>
+        {% for k, linha in request.session.carrinho.items %}
+        <tr>
+            <td class="d-none d-lg-block">
+                <img class="cart-img" src="{{ linha.imagem }}">
+            </td>
+            <td>
+                <a href="{% url 'produto:detalheproduto' linha.slug %}">
+                    {{ linha.produto_nome }}
+                </a>
+                <form method="get" action="{% url 'produto:removerdocarrinho' %}">
+                    <input type="hidden" name="vid" value="{{ linha.variacao_id }}">
+                    <button type="submit" class="btn pl-0 pr-3">
+                        <i class="ml-3 fas fa-times-circle text-danger"></i>
+                    </button>
+                </form>
+            </td>
+            <td>{{ linha.variacao_nome }}</td>
+
+            {% if linha.preco_quantitativo_promocional %}
+            <td>{{ linha.quantidade }} x {{ linha.preco_unitario_promocional|formata_dinheiro }}</td>
+            <td>{{ linha.preco_quantitativo_promocional|formata_dinheiro }}</td>
+            {% else %}
+            <td>{{ linha.quantidade }} x {{ linha.preco_unitario|formata_dinheiro }}</td>
+            <td>{{ linha.preco_quantitativo|formata_dinheiro }}</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>

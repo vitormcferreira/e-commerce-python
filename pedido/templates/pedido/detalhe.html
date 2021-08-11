@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block titulo %}Pedido N. {{ pedido.pk }} | {% endblock %}
+
+{% block conteudo %}
+{% include 'includes/_pedido.html' %}
+{% endblock %}

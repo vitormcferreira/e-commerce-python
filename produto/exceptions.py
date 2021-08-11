@@ -1,0 +1,2 @@
+class SemEstoqueError(Exception):
+    pass

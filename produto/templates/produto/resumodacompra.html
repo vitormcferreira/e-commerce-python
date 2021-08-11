@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% load vffilters %}
+
+{% block titulo %}Resumo da compra | {% endblock %}
+
+{% block conteudo %}
+<div class="row mb-5">
+    <div class="col-lg">
+        <h2>Resumo da sua compra</h2>
+        <p class="lead">Dados do usuário</p>
+        <p>Caso precise editar, <a href="{% url 'perfil:atualizar' %}">clique aqui</a></p>
+
+        <dl class="row">
+            <dt class="col-lg-2">Nome:</dt>
+            <dd class="col-lg-4">{{ usuario.first_name }}</dd>
+            <dt class="col-lg-2">Sobrenome:</dt>
+            <dd class="col-lg-4">{{ usuario.last_name }}</dd>
+
+            <dt class="col-lg-2">Idade:</dt>
+            <dd class="col-lg-4">{{ usuario.perfil.data_nascimento|get_idade }}</dd>
+            <dt class="col-lg-2">Nascimento:</dt>
+            <dd class="col-lg-4">{{ usuario.perfil.data_nascimento }}</dd>
+
+            <dt class="col-lg-2">CPF:</dt>
+            <dd class="col-lg-4">{{ usuario.perfil.cpf }}</dd>
+            <dt class="col-lg-2">E-mail:</dt>
+            <dd class="col-lg-4">{{ usuario.email }}</dd>
+        </dl>
+
+        <!-- TODO: Fazer o javascript para consultar e exibir os endereços de acordo com o que o cliente escolher -->
+        <p class="lead">Dados de endereço</p>
+        <div class="form-group">
+            <select id="select-enderecos" name="eid" class="form-control form-control-lg">
+                {% for endereco in enderecos %}
+                <option value="{{ endereco.pk }}">{{ endereco.apelido }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <dl class="row">
+            <dt class="col-lg-2">Endereço:</dt>
+            <dd class="col-lg-4">Av. Filho Junior</dd>
+            <dt class="col-lg-2">Número:</dt>
+            <dd class="col-lg-4">12</dd>
+
+            <dt class="col-lg-2">Complemento:</dt>
+            <dd class="col-lg-4">Casa</dd>
+            <dt class="col-lg-2">Nascimento:</dt>
+            <dd class="col-lg-4">Centro</dd>
+
+            <dt class="col-lg-2">Cidade:</dt>
+            <dd class="col-lg-4">São Paulo</dd>
+            <dt class="col-lg-2">Estado:</dt>
+            <dd class="col-lg-4">SP</dd>
+
+            <dt class="col-lg-2">CEP:</dt>
+            <dd class="col-lg-4">00000000</dd>
+        </dl>
+    </div>
+</div>
+
+{% include 'includes/_carrinho.html' %}
+
+<div class="row">
+    <div class="col">
+        <a class="btn btn-block btn-primary btn-lg" href="{% url 'pedido:salvarpedido' %}">
+            Realizar pedido e pagar
+        </a>
+    </div>
+</div>
+{% endblock %}

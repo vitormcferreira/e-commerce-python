@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block titulo %}Login | {% endblock %}
+
+{% block conteudo %}
+<div class="row">
+    <div class="col-lg">
+        <h1>Login</h1>
+        <form method="post" action="{% url 'perfil:login' %}">
+            {% csrf_token %}
+            {{ loginform|crispy }}
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                Entrar
+            </button>
+        </form>
+    </div>
+    <div class="col-lg">
+        <h1>Cadastro</h1>
+        <form method="post" action="{% url 'perfil:registrar' %}">
+            {% csrf_token %}
+            {{ registrarusuarioform|crispy }}
+            {{ registrarperfilform|crispy }}
+            <button type="submit" class="btn btn-primary btn-block btn-lg">
+                Cadastrar
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
