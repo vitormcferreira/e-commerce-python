@@ -1,5 +1,5 @@
-from perfil.models import Perfil
 from django.db import models
+from perfil.models import Perfil
 
 
 class Pedido(models.Model):
@@ -9,6 +9,7 @@ class Pedido(models.Model):
     usuario = models.ForeignKey(
         verbose_name='Usuário', to=Perfil, on_delete=models.CASCADE)
     total = models.FloatField()
+    qtd_total = models.PositiveIntegerField()
     status = models.CharField(
         default='C',
         max_length=1,

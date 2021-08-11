@@ -3,13 +3,14 @@
 
 <head>
     {% include 'includes/_head.html' %}
-    <title>{% block titulo %}{% endblock %}</title>
+    <title>{% block titulo %}{% endblock %}E-Commerce</title>
 </head>
 
 <body>
     {% include 'includes/_nav.html' %}
 
     <main class="container mt-4 mb-4">
+        {% include 'includes/_messages.html' %}
         {% block conteudo %}{% endblock %}
     </main>
     {% include 'includes/_footer.html' %}

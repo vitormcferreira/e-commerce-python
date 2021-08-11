@@ -1,9 +1,10 @@
-import re
-
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db import models
+from utils import functions
 from utils.functions import valida_cpf
+
+# para adicionar os erros
 
 
 class Perfil(models.Model):
@@ -17,6 +18,32 @@ class Perfil(models.Model):
         verbose_name='Usuário', to=User, on_delete=models.CASCADE)
     data_nascimento = models.DateField('Data de nascimento')
     cpf = models.CharField('CPF', max_length=11)
+
+    def __str__(self) -> str:
+        return self.usuario.get_full_name() or str(self.usuario)
+
+    # validação a nivel de model
+    # https://docs.djangoproject.com/en/3.2/ref/models/instances/#django.db.models.Model.clean
+    def clean(self):
+        error_list = []
+
+        if not valida_cpf(self.cpf):
+            error_list.append({'cpf': 'Digite um CPF válido'})
+
+        if error_list:
+            error_list = functions.normalize_error_list(error_list)
+            raise ValidationError(error_list)
+
+
+class Endereco(models.Model):
+    class Meta:
+        db_table = 'endereco'
+
+    apelido = models.CharField(
+        max_length=50, blank=False,
+        help_text='Digite aqui um apelido para o endereço. '
+        'Ele será usado para você identificar o endereço durante a compra'
+    )
     endereco = models.CharField('Endereço', max_length=50)
     numero = models.CharField('Número', max_length=5)
     complemento = models.CharField(max_length=30)
@@ -56,25 +83,20 @@ class Perfil(models.Model):
             ('TO', 'Tocantins'),
         )
     )
+    perfil = models.ForeignKey(to=Perfil, on_delete=models.CASCADE)
 
-    def __str__(self) -> str:
-        return self.usuario.get_full_name() or str(self.usuario)
+    def clean(self, *args, **kwargs):
+        error_list = []
 
-    # validação a nivel de model
-    # https://docs.djangoproject.com/en/3.2/ref/models/instances/#django.db.models.Model.clean
-    def clean(self):
-        error_messages = {}
+        apelido_repetido = Endereco.objects.all().filter(apelido=self.apelido).exists()
+        if apelido_repetido:
+            error_list.append({
+                'apelido': 'Você já possui um endereço com este apelido. Escolha outro.'
+            })
 
-        # para adicionar os erros
-        def add_error(campo, msg):
-            if not error_messages[campo]:
-                error_messages[campo] = []
-            error_messages[campo].append(msg)
-            
+        if error_list:
+            error_list = functions.normalize_error_list(error_list)
+            raise ValidationError(error_list)
 
-        if not valida_cpf(self.cpf):
-            add_error('cpf', 'Digite um CPF válido')
-
-        if error_messages:
-            raise ValidationError({campo: ValidationError(err)
-                                  for campo, err in error_messages.items()})
+    def __str__(self):
+        return f'{self.apelido}'

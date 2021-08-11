@@ -1,3 +1,9 @@
+from datetime import date
+from typing import Mapping
+
+from django.forms import ValidationError
+
+
 def formata_dinheiro(v):
     """ Formata string, int ou float para dinheiro no formato R$ 1.000,00 """
     try:
@@ -46,3 +52,44 @@ def valida_cpf(cpf):
         return True
     else:
         return False
+
+
+def qtd_total_carrinho(carrinho):
+    """Soma a quantidade de itens no carrinho"""
+    return sum([x['quantidade'] for x in carrinho.values()])
+
+
+def calcula_total_carrinho(carrinho):
+    soma = 0
+    for prod in carrinho.values():
+        if prod['preco_quantitativo_promocional']:
+            soma += prod['preco_quantitativo_promocional']
+        else:
+            soma += prod['preco_quantitativo']
+    return soma
+
+
+def normalize_error_list(error_list: list[Mapping[str, str]]):
+    erros = {}
+    for errs in error_list:
+        for err in errs.items():
+            field, msg = err
+
+            if not hasattr(erros, field):
+                erros[field] = []
+            erros[field].append(ValidationError(msg))
+    return erros
+
+
+def get_idade(dnasc: date):
+    try:
+        dnasc = date(dnasc)
+    except:
+        return ''
+
+    hoje = date.today()
+    diff = hoje - dnasc
+
+    idade = date.fromordinal(diff.days).year - 1
+
+    return idade

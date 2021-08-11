@@ -1,8 +1,6 @@
-from typing import Union
 from django.db import models
-from PIL import Image
 from django.utils.text import slugify
-from utils.functions import formata_dinheiro
+from PIL import Image
 
 
 class Produto(models.Model):
@@ -15,9 +13,6 @@ class Produto(models.Model):
     imagem = models.ImageField(
         upload_to='produto_imagens/%Y/%m/', blank=True, null=True)
     slug = models.SlugField(max_length=255, unique=True, blank=True, null=True)
-    # preco_marketing = models.FloatField('Preço')
-    # preco_marketing_promocional = models.FloatField(
-    #     'Preço promocional', default=0)
     tipo = models.CharField(
         default='V',
         max_length=1,
@@ -29,14 +24,6 @@ class Produto(models.Model):
 
     def __str__(self) -> str:
         return self.nome
-
-    # def preco_marketing_formatado(self):
-    #     return formata_dinheiro(self.preco_marketing)
-    # preco_marketing_formatado.short_description = 'Preço'
-
-    # def preco_marketing_promocional_formatado(self):
-    #     return formata_dinheiro(self.preco_marketing_promocional)
-    # preco_marketing_promocional_formatado.short_description = 'Preço promocional'
 
     def save(self, *args, **kwargs) -> None:
         if self.slug is None or not self.slug:
@@ -80,4 +67,4 @@ class Variacao(models.Model):
     estoque = models.PositiveIntegerField(default=1)
 
     def __str__(self) -> str:
-        return self.nome or self.produto.nome
+        return self.nome

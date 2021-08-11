@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from perfil.models import Perfil
+from perfil.models import Perfil, Endereco
 
 
 class PerfilAdmin(admin.ModelAdmin):
@@ -9,3 +9,4 @@ class PerfilAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Perfil, PerfilAdmin)
+admin.site.register(Endereco)
